@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default Deny Catch-All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email == 'pradhansubham024@gmail.com'
+      );
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == userId && isValidId(userId);
+      allow update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Admin List
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Citizen Complaints
+    match /complaints/{complaintId} {
+      allow get, list: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(complaintId);
+      allow update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // City Incidents
+    match /incidents/{incidentId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Emergency Cases
+    match /emergency_cases/{emergencyId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Field Tasks
+    match /field_tasks/{taskId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // CCTV Smart Camera Events
+    match /camera_events/{eventId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Notifications
+    match /notifications/{notificationId} {
+      allow get, list: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isSignedIn();
+    }
+
+    // Audit Logs
+    match /audit_logs/{logId} {
+      allow get, list: if isSignedIn();
+      allow create: if isSignedIn() && isValidId(logId);
+      allow update, delete: if false; // Immutability
+    }
+
+    // Tourism Places
+    match /tourism_places/{placeId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+
+    // System Settings
+    match /system_settings/{settingId} {
+      allow get, list: if true;
+      allow write: if isSignedIn();
+    }
+  }
+}

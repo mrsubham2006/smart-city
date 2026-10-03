@@ -1,0 +1,6 @@
+{
+  "name": "Civic Nexus AI - Bhubaneswar Smart City",
+  "description": "Proposed Smart City Intelligence and Emergency Response Platform for Bhubaneswar Municipal Corporation (BMC), Odisha. One City. One Intelligence. One Connected Response.",
+  "requestFramePermissions": ["geolocation", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

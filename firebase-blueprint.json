@@ -1,0 +1,251 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with role-based access attributes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "role": { "type": "string", "enum": ["CITIZEN", "BMC_ADMIN", "COMMISSIONER", "ZONE_OFFICER", "DEPARTMENT_HEAD", "SUPERVISOR", "FIELD_WORKER", "EMERGENCY_OPERATOR", "HOSPITAL_OPERATOR", "TRAFFIC_OPERATOR", "FIRE_OPERATOR", "TOURISM_OPERATOR", "ANALYST", "SYSTEM_ADMIN"] },
+        "department": { "type": "string", "maxLength": 80 },
+        "ward": { "type": "string", "maxLength": 50 },
+        "zone": { "type": "string", "maxLength": 50 },
+        "status": { "type": "string", "enum": ["ACTIVE", "INACTIVE", "SUSPENDED"] },
+        "createdAt": { "type": "string" },
+        "lastLogin": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "Complaint": {
+      "title": "Complaint",
+      "description": "Citizen civic grievance record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "ticketNo": { "type": "string", "maxLength": 30 },
+        "citizenId": { "type": "string", "maxLength": 128 },
+        "citizenName": { "type": "string", "maxLength": 120 },
+        "citizenPhone": { "type": "string", "maxLength": 20 },
+        "category": { "type": "string", "maxLength": 60 },
+        "subcategory": { "type": "string", "maxLength": 80 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "photoUrl": { "type": "string", "maxLength": 500 },
+        "voiceUrl": { "type": "string", "maxLength": 500 },
+        "address": { "type": "string", "maxLength": 250 },
+        "ward": { "type": "string", "maxLength": 50 },
+        "zone": { "type": "string", "maxLength": 50 },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "status": { "type": "string", "enum": ["SUBMITTED", "AI_ANALYSIS", "VERIFIED", "ASSIGNED", "ACKNOWLEDGED", "IN_PROGRESS", "FIELD_VERIFICATION", "RESOLVED", "CITIZEN_CONFIRMED", "CLOSED", "REJECTED", "DUPLICATE", "ESCALATED"] },
+        "priority": { "type": "string", "enum": ["P1_CRITICAL", "P2_HIGH", "P3_MEDIUM", "P4_LOW"] },
+        "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+        "department": { "type": "string", "maxLength": 80 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "citizenId", "category", "description", "status"]
+    },
+    "Incident": {
+      "title": "Incident",
+      "description": "City-level correlated civic incident",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "code": { "type": "string", "maxLength": 40 },
+        "title": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "category": { "type": "string", "maxLength": 60 },
+        "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+        "priority": { "type": "string", "enum": ["P1_CRITICAL", "P2_HIGH", "P3_MEDIUM", "P4_LOW"] },
+        "status": { "type": "string", "enum": ["ACTIVE", "CONTAINED", "RESOLVING", "RESOLVED", "CLOSED"] },
+        "department": { "type": "string", "maxLength": 80 },
+        "ward": { "type": "string", "maxLength": 50 },
+        "zone": { "type": "string", "maxLength": 50 },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "source": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "code", "title", "category", "severity", "status"]
+    },
+    "EmergencyCase": {
+      "title": "EmergencyCase",
+      "description": "Critical emergency response record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "emergencyType": { "type": "string", "enum": ["FIRE", "ROAD_ACCIDENT", "MEDICAL_EMERGENCY", "FLOOD", "BUILDING_INCIDENT", "PUBLIC_SAFETY"] },
+        "title": { "type": "string", "maxLength": 150 },
+        "location": { "type": "string", "maxLength": 200 },
+        "ward": { "type": "string", "maxLength": 50 },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+        "status": { "type": "string", "enum": ["REPORTED", "DISPATCHED", "ON_SCENE", "RESOLVED", "CLOSED"] },
+        "nearestHospital": { "type": "string", "maxLength": 100 },
+        "nearestFireStation": { "type": "string", "maxLength": 100 },
+        "etaMinutes": { "type": "number" },
+        "humanApproved": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "emergencyType", "title", "location", "severity", "status"]
+    },
+    "FieldTask": {
+      "title": "FieldTask",
+      "description": "Field team dispatch work order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "complaintId": { "type": "string", "maxLength": 128 },
+        "incidentId": { "type": "string", "maxLength": 128 },
+        "workerId": { "type": "string", "maxLength": 128 },
+        "workerName": { "type": "string", "maxLength": 120 },
+        "department": { "type": "string", "maxLength": 80 },
+        "title": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 1500 },
+        "status": { "type": "string", "enum": ["ASSIGNED", "ACCEPTED", "ON_SITE", "RESOLVED", "REJECTED"] },
+        "priority": { "type": "string", "enum": ["P1_CRITICAL", "P2_HIGH", "P3_MEDIUM", "P4_LOW"] },
+        "ward": { "type": "string", "maxLength": 50 },
+        "location": { "type": "string", "maxLength": 200 },
+        "beforePhotoUrl": { "type": "string", "maxLength": 500 },
+        "afterPhotoUrl": { "type": "string", "maxLength": 500 },
+        "workerNotes": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "workerId", "title", "status"]
+    },
+    "CameraEvent": {
+      "title": "CameraEvent",
+      "description": "Smart CCTV intelligence event feed",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "cameraCode": { "type": "string", "maxLength": 50 },
+        "locationName": { "type": "string", "maxLength": 120 },
+        "ward": { "type": "string", "maxLength": 50 },
+        "eventType": { "type": "string", "maxLength": 80 },
+        "confidence": { "type": "number" },
+        "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] },
+        "status": { "type": "string", "enum": ["DETECTED", "VERIFIED", "ACTIONED", "DISMISSED"] },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "cameraCode", "locationName", "eventType", "confidence"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User or system alert notification",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "roleTarget": { "type": "string", "maxLength": 50 },
+        "title": { "type": "string", "maxLength": 120 },
+        "message": { "type": "string", "maxLength": 500 },
+        "type": { "type": "string", "enum": ["INFO", "WARNING", "CRITICAL", "SUCCESS"] },
+        "link": { "type": "string", "maxLength": 200 },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "message", "type", "isRead"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Tamper-evident system activity record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userName": { "type": "string", "maxLength": 120 },
+        "userRole": { "type": "string", "maxLength": 50 },
+        "action": { "type": "string", "maxLength": 100 },
+        "entityType": { "type": "string", "maxLength": 50 },
+        "entityId": { "type": "string", "maxLength": 128 },
+        "details": { "type": "string", "maxLength": 1000 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "userId", "action", "timestamp"]
+    },
+    "TourismPlace": {
+      "title": "TourismPlace",
+      "description": "Bhubaneswar smart tourism landmark",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "category": { "type": "string", "maxLength": 60 },
+        "ward": { "type": "string", "maxLength": 50 },
+        "lat": { "type": "number" },
+        "lng": { "type": "number" },
+        "timings": { "type": "string", "maxLength": 100 },
+        "entryFee": { "type": "string", "maxLength": 100 },
+        "crowdLevel": { "type": "string", "enum": ["LOW", "MODERATE", "BUSY", "VERY_BUSY"] },
+        "description": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["id", "name", "category"]
+    },
+    "SystemSetting": {
+      "title": "SystemSetting",
+      "description": "Global application state and controls",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "demoModeActive": { "type": "boolean" },
+        "aiEnabled": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Stores user profiles with role and department metadata"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "UserProfile" },
+      "description": "Admin identity documents for secure role lookup"
+    },
+    "/complaints/{complaintId}": {
+      "schema": "Complaint",
+      "description": "Citizen complaints and status workflow"
+    },
+    "/incidents/{incidentId}": {
+      "schema": "Incident",
+      "description": "City-wide incidents monitored by command center"
+    },
+    "/emergency_cases/{emergencyId}": {
+      "schema": "EmergencyCase",
+      "description": "Emergency coordination cases"
+    },
+    "/field_tasks/{taskId}": {
+      "schema": "FieldTask",
+      "description": "Work orders assigned to field workers"
+    },
+    "/camera_events/{eventId}": {
+      "schema": "CameraEvent",
+      "description": "Smart CCTV camera detections"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Audit trail entries"
+    },
+    "/tourism_places/{placeId}": {
+      "schema": "TourismPlace",
+      "description": "Heritage and tourist points of interest in Bhubaneswar"
+    },
+    "/system_settings/{settingId}": {
+      "schema": "SystemSetting",
+      "description": "Global system configurations"
+    }
+  }
+}
